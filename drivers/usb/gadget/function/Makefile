@@ -65,6 +65,7 @@ usb_f_qdss-y			:= f_qdss.o u_qdss.o
 obj-$(CONFIG_USB_F_QDSS)	+= usb_f_qdss.o
 usb_f_gsi-y			:= f_gsi.o
 obj-$(CONFIG_USB_F_GSI)		+= usb_f_gsi.o
+ifneq ($(CONFIG_USB_ANDROID_SAMSUNG_MTP),y)
 usb_f_mtp-y			:= f_mtp.o
 obj-$(CONFIG_USB_F_MTP)		+= usb_f_mtp.o
 usb_f_ptp-y			:= f_ptp.o

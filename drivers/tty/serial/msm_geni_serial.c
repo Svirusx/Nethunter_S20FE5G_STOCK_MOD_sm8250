@@ -368,7 +368,7 @@ static void msm_geni_serial_enable_interrupts(struct uart_port *uport)
 static bool msm_serial_try_disable_interrupts(struct uart_port *uport)
 {
 	unsigned int geni_m_irq_en, geni_s_irq_en;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	/*
 	 * We don't need to disable interrupts if spinlock is not taken
@@ -507,7 +507,7 @@ static bool check_transfers_inflight(struct uart_port *uport)
 	bool m_cmd_active = false;
 	bool rx_active = false;
 	u32 rx_fifo_status = 0;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	u32 geni_status = geni_read_reg_nolog(uport->membase,
 						SE_GENI_STATUS);
 	struct circ_buf *xmit = &uport->state->xmit;
@@ -536,7 +536,7 @@ static bool check_transfers_inflight(struct uart_port *uport)
 static void wait_for_transfers_inflight(struct uart_port *uport)
 {
 	int iter = 0;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	unsigned int geni_status;
 
 	geni_status = geni_read_reg_nolog(uport->membase, SE_GENI_STATUS);
@@ -561,7 +561,7 @@ static void wait_for_transfers_inflight(struct uart_port *uport)
 
 static int vote_clock_on(struct uart_port *uport)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	int usage_count;
 	int ret = 0;
 	u32 geni_ios;
@@ -589,7 +589,7 @@ static int vote_clock_on(struct uart_port *uport)
 
 static int vote_clock_off(struct uart_port *uport)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	int usage_count;
 	int ret = 0;
 
@@ -639,7 +639,7 @@ static int msm_geni_serial_ioctl(struct uart_port *uport, unsigned int cmd,
 						unsigned long arg)
 {
 	int ret = -ENOIOCTLCMD;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	enum uart_error_code uart_error;
 
 	switch (cmd) {
@@ -674,7 +674,7 @@ static int msm_geni_serial_ioctl(struct uart_port *uport, unsigned int cmd,
 
 static void msm_geni_serial_break_ctl(struct uart_port *uport, int ctl)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	if (!uart_console(uport) && device_pending_suspend(uport)) {
 		IPC_LOG_MSG(port->ipc_log_misc,
@@ -702,7 +702,7 @@ static unsigned int msm_geni_serial_get_mctrl(struct uart_port *uport)
 {
 	u32 geni_ios = 0;
 	unsigned int mctrl = TIOCM_DSR | TIOCM_CAR | TIOCM_CTS;	/* fix for bt uart */
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	if (!uart_console(uport) && device_pending_suspend(uport)) {
 		IPC_LOG_MSG(port->ipc_log_misc,
@@ -732,7 +732,7 @@ static void msm_geni_serial_set_mctrl(struct uart_port *uport,
 							unsigned int mctrl)
 {
 	u32 uart_manual_rfr = 0;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	if (device_pending_suspend(uport)) {
 		IPC_LOG_MSG(port->ipc_log_misc,
@@ -783,7 +783,7 @@ static struct msm_geni_serial_port *get_port_from_line(int line,
 static int msm_geni_serial_power_on(struct uart_port *uport, bool force)
 {
 	int ret = 0;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	if (force) {
 		ret = pm_runtime_force_resume(uport->dev);
@@ -834,7 +834,7 @@ static int msm_geni_serial_power_on(struct uart_port *uport, bool force)
 
 static void msm_geni_serial_power_off(struct uart_port *uport, bool force)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	int usage_count = atomic_read(&uport->dev->power.usage_count);
 
 	if (!usage_count) {
@@ -972,7 +972,7 @@ static void msm_geni_serial_poll_put_char(struct uart_port *uport,
 					unsigned char c)
 {
 	int b = (int) c;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	geni_write_reg_nolog(port->tx_wm, uport->membase,
 					SE_GENI_TX_WATERMARK_REG);
@@ -1366,7 +1366,7 @@ static void stop_tx_sequencer(struct uart_port *uport)
 	unsigned int geni_status;
 	bool timeout, is_irq_masked;
 	unsigned int dma_dbg;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	geni_status = geni_read_reg_nolog(uport->membase, SE_GENI_STATUS);
 	/* Possible stop tx is called multiple times. */
@@ -1461,7 +1461,7 @@ static void stop_tx_sequencer(struct uart_port *uport)
 
 static void msm_geni_serial_stop_tx(struct uart_port *uport)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	if (!uart_console(uport) && device_pending_suspend(uport)) {
 		dev_err(uport->dev, "%s.Device is suspended.\n", __func__);
@@ -1475,7 +1475,7 @@ static void msm_geni_serial_stop_tx(struct uart_port *uport)
 static void start_rx_sequencer(struct uart_port *uport)
 {
 	unsigned int geni_status;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	u32 geni_se_param = UART_PARAM_RFR_OPEN;
 
 	if (port->startup_in_progress)
@@ -1516,7 +1516,7 @@ static void start_rx_sequencer(struct uart_port *uport)
 
 static void msm_geni_serial_start_rx(struct uart_port *uport)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	if (!uart_console(uport) && device_pending_suspend(uport)) {
 		dev_err(uport->dev, "%s.Device is suspended.\n", __func__);
@@ -1566,7 +1566,7 @@ static int stop_rx_sequencer(struct uart_port *uport)
 {
 	unsigned int geni_status;
 	bool timeout, is_irq_masked;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	unsigned long flags = 0;
 	bool is_rx_active;
 	unsigned int stale_delay;
@@ -1754,7 +1754,7 @@ exit_rx_seq:
 
 static void msm_geni_serial_stop_rx(struct uart_port *uport)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	int ret;
 
 	if (!uart_console(uport) && device_pending_suspend(uport)) {
@@ -1814,7 +1814,7 @@ static int msm_geni_serial_handle_rx(struct uart_port *uport, bool drop_rx)
 	unsigned int rx_last_byte_valid = 0;
 	unsigned int rx_last = 0;
 	struct tty_port *tport;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	tport = &uport->state->port;
 	rx_fifo_status = geni_read_reg_nolog(uport->membase,
@@ -1941,7 +1941,7 @@ exit_handle_tx:
  */
 static bool msm_geni_find_wakeup_byte(struct uart_port *uport, int size)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	unsigned char *buf = (unsigned char *)port->rx_buf;
 
 	if (buf[0] == port->wakeup_byte) {
@@ -2379,7 +2379,7 @@ static irqreturn_t msm_geni_serial_isr(int isr, void *dev)
 static irqreturn_t msm_geni_wakeup_isr(int isr, void *dev)
 {
 	struct uart_port *uport = dev;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	struct tty_struct *tty;
 	unsigned long flags;
 
@@ -2771,7 +2771,7 @@ static void msm_geni_serial_set_termios(struct uart_port *uport,
 	unsigned int stop_bit_len;
 	int clk_div, ret;
 	unsigned long ser_clk_cfg = 0;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	unsigned long clk_rate;
 	unsigned long desired_rate;
 	unsigned int clk_idx;
@@ -2929,7 +2929,7 @@ static unsigned int msm_geni_serial_tx_empty(struct uart_port *uport)
 {
 	unsigned int tx_fifo_status;
 	unsigned int is_tx_empty = 1;
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 
 	if (!uart_console(uport) && device_pending_suspend(uport))
 		return 1;
@@ -4043,7 +4043,7 @@ static int msm_geni_serial_sys_resume(struct device *dev)
 
 int msm_geni_serial_get_clock_count(struct uart_port *uport)
 {
-	struct msm_geni_serial_port *port = GET_DEV_PORT(uport);
+	struct msm_geni_serial_port *port __maybe_unused = GET_DEV_PORT(uport);
 	return port->ioctl_count;
 }
 EXPORT_SYMBOL(msm_geni_serial_get_clock_count);

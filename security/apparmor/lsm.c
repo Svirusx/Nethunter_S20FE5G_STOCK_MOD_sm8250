@@ -43,6 +43,10 @@
 #include "include/mount.h"
 #include "include/secid.h"
 
+#undef SK_CTX
+#define SK_CTX(sk) ((struct aa_sk_ctx *)&(sk)->sk_security[0])
+
+
 /* Flag indicating whether initialization completed */
 int apparmor_initialized;
 
@@ -767,7 +771,7 @@ static int apparmor_sk_alloc_security(struct sock *sk, int family, gfp_t flags)
 	if (!ctx)
 		return -ENOMEM;
 
-	SK_CTX(sk) = ctx;
+	*SK_CTX(sk) = *ctx;
 
 	return 0;
 }
@@ -779,7 +783,7 @@ static void apparmor_sk_free_security(struct sock *sk)
 {
 	struct aa_sk_ctx *ctx = SK_CTX(sk);
 
-	SK_CTX(sk) = NULL;
+	memset(SK_CTX(sk), 0, sizeof(*ctx));
 	aa_put_label(ctx->label);
 	aa_put_label(ctx->peer);
 	kfree(ctx);

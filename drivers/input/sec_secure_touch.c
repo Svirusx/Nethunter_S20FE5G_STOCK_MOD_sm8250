@@ -13,6 +13,7 @@ struct sec_secure_touch *g_ss_touch;
 
 #undef SEC_SECURE_TOUCH_NEXT_PLAN
 
+#include <linux/of.h>
 #include <linux/input/sec_secure_touch.h>
 #include <linux/notifier.h>
 

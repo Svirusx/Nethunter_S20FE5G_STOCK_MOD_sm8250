@@ -11621,7 +11621,7 @@ static int fixup_call_args(struct bpf_verifier_env *env)
 static int fixup_bpf_calls(struct bpf_verifier_env *env)
 {
 	struct bpf_prog *prog = env->prog;
-	bool expect_blinding = bpf_jit_blinding_enabled(prog);
+	bool expect_blinding = prog->jit_requested;
 	struct bpf_insn *insn = prog->insnsi;
 	const struct bpf_func_proto *fn;
 	const int insn_cnt = prog->len;

@@ -8,7 +8,7 @@
 obj-$(CONFIG_INPUT)		+= input-core.o
 input-core-y := input.o input-compat.o input-mt.o ff-core.o event_notify.o
 obj-$(CONFIG_INPUT_TOUCHSCREEN) += sec_cmd.o
-obj-$(CONFIG_SEC_DEBUG_TSP_LOG) += sec_tsp_log.o
+obj-y += sec_tsp_log.o
 obj-$(CONFIG_INPUT_TOUCHSCREEN_TCLMV2)	+= sec_tclm_v2.o
 obj-$(CONFIG_INPUT_SEC_SECURE_TOUCH)	+= sec_secure_touch.o
 

@@ -10,6 +10,7 @@
  */
 
 #include <linux/input/sec_cmd.h>
+#include <linux/input/sec_tsp_log.h>
 
 struct class *tsp_sec_class;
 

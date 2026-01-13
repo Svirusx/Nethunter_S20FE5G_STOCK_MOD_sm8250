@@ -1,3 +1,4 @@
+#include <linux/input/sec_tsp_log.h>
 #ifdef SEC_TSP_FACTORY_TEST
 
 #define BUFFER_MAX			((256 * 1024) - 16)

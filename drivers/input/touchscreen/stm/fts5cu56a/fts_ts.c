@@ -20,7 +20,7 @@
  *
  * THIS SOFTWARE IS SPECIFICALLY DESIGNED FOR EXCLUSIVE USE WITH ST PARTS.
  *******************************************************************************/
-
+#include <linux/input/sec_tsp_log.h>
 #include <linux/init.h>
 #include <linux/errno.h>
 #include <linux/platform_device.h>
